@@ -1,5 +1,7 @@
 import 'package:bookly/Features/home/domain/entities/book_entity.dart';
+import 'package:bookly/constants.dart';
 import 'package:bookly/core/utils/api_service.dart';
+import 'package:bookly/core/utils/functions/save_books.dart';
 
 import '../models/book_model/book_model.dart';
 
@@ -20,6 +22,8 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
         endPoint: 'volumes?Filtering=free-ebooks&q=programming');
     BookModel bookModel = BookModel.fromJson(data);
     List<BookEntity> books = bookModel.items!;
+    //cache data to local data base
+    saveBooksData(books, kFeaturedBox);
     return books;
   }
 
@@ -29,6 +33,8 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
         endPoint: 'volumes?Filtering=free-ebooks&Sorting=newest&q=programming');
     BookModel bookModel = BookModel.fromJson(data);
     List<BookEntity> books = bookModel.items!;
+    //cache data to local data base
+    saveBooksData(books, kNewestBox);
     return books;
   }
 }
