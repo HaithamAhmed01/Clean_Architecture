@@ -18,13 +18,15 @@ class HomeRepoImpl extends HomeRepo {
   @override
   Future<Either<Failure, List<BookEntity>>> fetchFeaturedBooks() async {
     try {
-      List<BookEntity> books;
-      books = homeLocalDataSource.fetchFeaturedBooks();
-      if (books.isNotEmpty) {
-        return right(books);
+      List<BookEntity> localBook;
+      List<BookEntity> remoteBooks;
+      localBook = homeLocalDataSource.fetchFeaturedBooks();
+      remoteBooks = await homeRemoteDataSource.fetchFeaturedBooks();
+      if (localBook.isNotEmpty && localBook != remoteBooks) {
+        return right(localBook);
       }
-      books = await homeRemoteDataSource.fetchFeaturedBooks();
-      return right(books);
+      localBook = await homeRemoteDataSource.fetchFeaturedBooks();
+      return right(localBook);
     } catch (e) {
       if (e is DioError) {
         return left(ServerFailure.fromDiorError(e));
@@ -42,6 +44,21 @@ class HomeRepoImpl extends HomeRepo {
         return right(books);
       }
       books = await homeRemoteDataSource.fetchNewestBooks();
+      return right(books);
+    } catch (e) {
+      if (e is DioError) {
+        return left(ServerFailure.fromDiorError(e));
+      }
+      return left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BookEntity>>> fetchSimilarBooks(
+      {required String category}) async {
+    try {
+      List<BookEntity> books;
+      books = await homeRemoteDataSource.fetchSimilarBooks(category: category);
       return right(books);
     } catch (e) {
       if (e is DioError) {

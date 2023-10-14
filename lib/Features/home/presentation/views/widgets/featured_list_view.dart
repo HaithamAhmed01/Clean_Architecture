@@ -1,10 +1,17 @@
+import 'package:bookly/Features/home/domain/entities/book_entity.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_book_item.dart';
 
-class FeaturedBooksListView extends StatelessWidget {
-  const FeaturedBooksListView({Key? key}) : super(key: key);
+class FeaturedBooksListView extends StatefulWidget {
+  const FeaturedBooksListView({Key? key, required this.books}) : super(key: key);
+  final List<BookEntity> books;
 
+  @override
+  State<FeaturedBooksListView> createState() => _FeaturedBooksListViewState();
+}
+
+class _FeaturedBooksListViewState extends State<FeaturedBooksListView> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -12,10 +19,13 @@ class FeaturedBooksListView extends StatelessWidget {
       child: ListView.builder(
           physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
+          itemCount: widget.books.length,
           itemBuilder: (context, index) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: CustomBookImage(),
+            return  Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: CustomBookImage(
+                imageUrl: widget.books[index].image,
+              ),
             );
           }),
     );

@@ -9,6 +9,8 @@ abstract class HomeRemoteDataSource {
   Future<List<BookEntity>> fetchFeaturedBooks();
 
   Future<List<BookEntity>> fetchNewestBooks();
+
+  Future<List<BookEntity>> fetchSimilarBooks({required String category});
 }
 
 class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
@@ -35,6 +37,16 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
     List<BookEntity> books = bookModel.items!;
     //cache data to local data base
     saveBooksData(books, kNewestBox);
+    return books;
+  }
+
+  @override
+  Future<List<BookEntity>> fetchSimilarBooks({required String category}) async {
+    var data = await apiService.get(
+        endPoint:
+            'volumes?Filtering=free-ebooks&relevance=$category&q=subject:Programming');
+    BookModel bookModel = BookModel.fromJson(data);
+    List<BookEntity> books = bookModel.items!;
     return books;
   }
 }

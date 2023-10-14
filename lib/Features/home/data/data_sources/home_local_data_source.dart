@@ -20,4 +20,5 @@ class HomeLocalDataSourceImpl extends HomeLocalDataSource {
     var box= Hive.box<BookEntity>(kNewestBox);
     return box.values.toList();
   }
+
 }
