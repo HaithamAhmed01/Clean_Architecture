@@ -22,3 +22,11 @@ class SimilarBooksSuccess extends SimilarBooksState {
 }
 
 class SimilarBooksLoading extends SimilarBooksState {}
+
+class SimilarBooksPaginationLoading extends SimilarBooksState {}
+
+class SimilarBooksPaginationFailure extends SimilarBooksState {
+  final String errMessage;
+
+  SimilarBooksPaginationFailure(this.errMessage);
+}

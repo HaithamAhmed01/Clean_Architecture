@@ -6,16 +6,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'similar_books_state.dart';
 
 class SimilarBooksCubit extends Cubit<SimilarBooksState> {
-  SimilarBooksCubit(this.fetchSimilarBooksUseCase) : super(SimilarBooksInitial());
+  SimilarBooksCubit(this.fetchSimilarBooksUseCase)
+      : super(SimilarBooksInitial());
 
   final FetchSimilarBooksUseCase fetchSimilarBooksUseCase;
 
-  Future<void> fetchSimilarBooks({required String category}) async {
-    emit(SimilarBooksLoading());
-    var result = await fetchSimilarBooksUseCase.call(category);
+  Future<void> fetchSimilarBooks({
+    required String category,
+    int pageNumber = 0,
+  }) async {
+    if (pageNumber == 0) {
+      emit(SimilarBooksLoading());
+    } else {
+      emit(SimilarBooksPaginationLoading());
+    }
+
+    var result = await fetchSimilarBooksUseCase.call(
+      category,
+      pageNumber,
+    );
     result.fold(
       (failure) {
-        emit(SimilarBooksFailure(failure.message));
+        if (pageNumber == 0) {
+          emit(SimilarBooksFailure(failure.message));
+        } else {
+          emit(SimilarBooksPaginationFailure(failure.message));
+        }
       },
       (books) {
         emit(SimilarBooksSuccess(books));
