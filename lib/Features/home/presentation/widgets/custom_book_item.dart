@@ -11,6 +11,12 @@ class CustomBookImage extends StatelessWidget {
       aspectRatio: 2.6 / 4,
       child: CachedNetworkImage(
         imageUrl: imageUrl,
+        placeholder: (context, url) => Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.grey.withOpacity(.3),
+          ),
+        ),
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
@@ -20,7 +26,7 @@ class CustomBookImage extends StatelessWidget {
             ),
           ),
         ),
-        errorWidget: (context, url, error) =>  Container(
+        errorWidget: (context, url, error) => Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             color: Colors.grey.withOpacity(.3),
